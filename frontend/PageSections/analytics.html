@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense & Income Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1f71, #5626c4);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeIn 1s ease-out forwards;
+            background: linear-gradient(90deg, #ffdd00, #ff6a00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .container {
+            max-width: 70%;
+            margin: auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out forwards;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transform: scale(1.02);
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .chart-box {
+            flex: 1;
+            min-width: 45%;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 350px !important;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                flex-direction: column;
+            }
+            .chart-box {
+                min-width: 100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Expense Analytics</h1>
+        <div class="card">
+            <div class="chart-container">
+                <div class="chart-box" id="expensePieContainer">
+                    <canvas id="expensePieChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h1>Income Analytics</h1>
+        <div class="card">
+            <div class="chart-container">
+                <div class="chart-box" id="incomePieContainer">
+                    <canvas id="incomePieChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Expense Bar Chart
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Food', 'Transport', 'Rent', 'Entertainment'],
+                    datasets: [{
+                        label: 'Expenses',
+                        data: [200, 150, 400, 120],
+                        backgroundColor: ['#ff4d4d', '#ffa502', '#2980b9', '#9b59b6'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Expense Pie Chart
+            const pieCtx = document.getElementById('expensePieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Food', 'Transport', 'Rent', 'Entertainment'],
+                    datasets: [{
+                        data: [200, 150, 400, 120],
+                        backgroundColor: ['#ff6347', '#ffcc00', '#3498db', '#8e44ad'],
+                        hoverOffset: 4
+                    }]
+                }
+            });
+
+            // Income Bar Chart
+            const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+            new Chart(incomeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Job', 'Freelancing', 'Investments', 'Others'],
+                    datasets: [{
+                        label: 'Income',
+                        data: [1000, 500, 300, 150],
+                        backgroundColor: ['#1abc9c', '#16a085', '#f39c12', '#c0392b'],
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }]
+                }
+            });
+
+            // Income Pie Chart
+            const incomePieCtx = document.getElementById('incomePieChart').getContext('2d');
+            new Chart(incomePieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Job', 'Freelancing', 'Investments', 'Others'],
+                    datasets: [{
+                        data: [1000, 500, 300, 150],
+                        backgroundColor: ['#27ae60', '#2ecc71', '#f1c40f', '#d35400'],
+                        hoverOffset: 4
+                    }]
+                }
+            });
+
+            // Click Events for Pie Charts (Redirect)
+            document.getElementById("expensePieContainer").addEventListener("click", function() {
+                animateClick(this, "expensedetails.html");
+            });
+
+            document.getElementById("incomePieContainer").addEventListener("click", function() {
+                animateClick(this, "incomedetails.html");
+            });
+
+            function animateClick(element, redirectUrl) {
+                element.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    element.style.transform = "scale(1)";
+                    window.location.href = redirectUrl;
+                }, 200);
+            }
+        };
+    </script>
+
+</body>
+</html>

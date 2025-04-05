@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Expense Management</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <style>
+    /* Global Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #009688, #005f73);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .contact-section {
+      width: 90%;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+      animation: slideUp 1s ease-in-out;
+    }
+    h2 {
+      text-align: center;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    p {
+      text-align: center;
+      color: #eee;
+      margin-bottom: 20px;
+    }
+    .contact-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    /* Left Side - Contact Details */
+    .contact-info {
+      flex: 1;
+      min-width: 300px;
+      color: #fff;
+    }
+    .contact-info h3 {
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .contact-info p {
+      margin: 5px 0;
+    }
+    .social-links a {
+      color: #fff;
+      font-size: 20px;
+      margin-right: 10px;
+      transition: transform 0.3s ease-in-out;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+      color: #ffcc00;
+    }
+    /* Right Side - Contact Form */
+    form {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    label {
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease-in-out;
+    }
+    input:focus, textarea:focus, select:focus {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    button {
+      background: #ffcc00;
+      color: #005f73;
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out, transform 0.2s;
+    }
+    button:hover {
+      background: #ffdd44;
+      transform: scale(1.05);
+    }
+    .confirmation {
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .contact-content {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section id="contact" class="contact-section">
+    <h2>Contact Us</h2>
+    <p>Have a question? We’d love to hear from you!</p>
+    <div class="contact-content">
+      <!-- Left Side: Contact Details -->
+      <div class="contact-info">
+        <h3>Get in Touch</h3>
+        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@expensetracker.com</p>
+        <p><i class="fas fa-phone"></i> <strong>Phone:</strong> +91 98765 XXXXX</p>
+        <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> Infinity Tower, Bhiwandi, India</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <!-- Right Side: Contact Form -->
+      <form id="contact-form">
+        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" id="email" name="email" required>
+        <label for="category"><i class="fas fa-list"></i> Inquiry Type</label>
+        <select id="category" name="category">
+          <option value="billing">Billing Issue</option>
+          <option value="technical">Technical Support</option>
+          <option value="general">General Query</option>
+        </select>
+        <label for="message"><i class="fas fa-comment"></i> Message</label>
+        <textarea id="message" name="message" required></textarea>
+        <button type="submit">Send Message</button>
+        <p class="confirmation">Thank you! Your message has been sent.</p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById("contact-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      document.querySelector(".confirmation").style.display = "block";
+    });
+
+    // Autofill user info (if logged in)
+    window.onload = async function() {
+      const response = await fetch("/api/user/contact-info");
+      const data = await response.json();
+      if (data.name && data.email) {
+        document.getElementById("name").value = data.name;
+        document.getElementById("email").value = data.email;
+      }
+    };
+  </script>
+</body>
+</html>

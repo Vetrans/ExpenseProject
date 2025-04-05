@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Expense | Expense Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      color: #333;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    /* Section Styling */
+    #add-expense {
+      max-width: 500px;
+      margin: auto;
+      padding: 40px;
+      background: linear-gradient(135deg, #ffffff, #f7f7f7);
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #ff512f, #dd2476);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+    /* Form Styling */
+    .form-container {
+      text-align: left;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    input:focus, select:focus {
+      border: 1px solid #ff4b2b;
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 75, 43, 0.3);
+    }
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: scale(1.05);
+    }
+    /* Expense List */
+    .item-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .expense-item {
+      background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    .expense-item span {
+      font-size: 1.1rem;
+    }
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      #add-expense {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <!-- Add Expense Form -->
+    <section id="add-expense">
+        <h1 class="section-title">Add Expense</h1>
+        <div class="form-container">
+            <form id="expense-form">
+                <input type="text" id="expense-name" name="expense-name" placeholder="Expense Name" required>
+                <select id="expense-category" name="expense-category" required>
+                    <option value="">Select Category</option>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="number" id="expense-amount" placeholder="Amount" required>
+                <input type="date" id="expense-date" required>
+                <button type="submit" class="submit-btn">Add Expense</button>
+            </form>
+        </div>
+
+        <!-- Expense List -->
+        <div id="expense-list" class="item-list"></div>
+    </section>
+
+    <script>
+      // Function to add expense via API call
+      document.getElementById("expense-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+    
+        // Get token from localStorage
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          window.location.href = "login.html";
+          return;
+        }
+    
+        // Gather form data
+        const expenseName = document.getElementById("expense-name").value.trim();
+        const expenseCategory = document.getElementById("expense-category").value;
+        const expenseAmount = document.getElementById("expense-amount").value;
+        const expenseDate = document.getElementById("expense-date").value;
+    
+        // Validation
+        if (!expenseName || !expenseCategory || !expenseAmount || !expenseDate) {
+          alert("Please fill all fields.");
+          return;
+        }
+    
+        // Prepare expense data
+        const expenseData = {
+          title: expenseName,
+          category: expenseCategory,
+          amount: parseFloat(expenseAmount), // Ensure it's a number
+          date: expenseDate,
+        };
+    
+        try {
+          // Make POST request to add the expense
+          const response = await fetch("http://localhost:5000/api/expenses", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`, // Ensure token is sent as Bearer token
+            },
+            body: JSON.stringify(expenseData),
+          });
+    
+          const result = await response.json();
+    
+          if (response.ok) {
+            alert("Expense added successfully!");
+    
+            // Append new expense to the list
+            const expenseItem = document.createElement("div");
+            expenseItem.classList.add("expense-item");
+            expenseItem.innerHTML = `
+              <span><strong>${expenseName}</strong> (${expenseCategory}) - ₹${expenseAmount} <br><small>${expenseDate}</small></span>
+              <button class="delete-btn" onclick="deleteExpense(this, '${result.id}')">Delete</button>
+            `;
+            document.getElementById("expense-list").appendChild(expenseItem);
+    
+            // Reset the form fields
+            document.getElementById("expense-form").reset();
+          } else {
+            alert("Failed to add expense: " + (result.error || "Unknown error"));
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred while adding the expense.");
+        }
+      });
+    
+      // Function to delete expense
+      async function deleteExpense(button, expenseId) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          window.location.href = "login.html";
+          return;
+        }
+    
+        try {
+          const response = await fetch(`http://localhost:5000/api/expenses/${expenseId}`, {
+            method: "DELETE",  // DELETE method
+            headers: {
+              "Authorization": `Bearer ${token}`, // Sending token for authorization
+            },
+          });
+    
+          const result = await response.json();
+    
+          if (response.ok) {
+            alert("Expense deleted successfully!");
+            button.parentElement.remove(); // Remove expense from the DOM
+          } else {
+            alert("Failed to delete expense: " + (result.error || "Unknown error"));
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred while deleting the expense.");
+        }
+      }
+    
+      // Fetch and display expense list
+      async function fetchExpenses() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          window.location.href = "login.html";
+          return;
+        }
+    
+        try {
+          const response = await fetch("http://localhost:5000/api/expenses", {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+    
+          const result = await response.json();
+    
+          if (response.ok) {
+            const expenseList = document.getElementById("expense-list");
+            expenseList.innerHTML = ""; // Clear existing list
+    
+            result.forEach(expense => {
+              const expenseItem = document.createElement("div");
+              expenseItem.classList.add("expense-item");
+              expenseItem.innerHTML = `
+                <span><strong>${expense.title}</strong> (${expense.category}) - ₹${expense.amount} <br><small>${expense.date}</small></span>
+                <button class="delete-btn" onclick="deleteExpense(this, '${expense.id}')">Delete</button>
+              `;
+              expenseList.appendChild(expenseItem);
+            });
+          } else {
+            alert("Failed to fetch expenses: " + (result.error || "Unknown error"));
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred while fetching expenses.");
+        }
+      }
+    
+      // Call fetchExpenses on page load
+      document.addEventListener("DOMContentLoaded", fetchExpenses);
+    
+    </script>
+    
+      
+      
+
+</body>
+</html>

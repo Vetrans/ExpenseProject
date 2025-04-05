@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savings Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1a1a2e;
+      color: #e5e5e5;
+      padding-top: 20px;
+    }
+    header {
+      background-color: #27ae60;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+    header nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+    header nav a:hover {
+      color: #ffcc00;
+    }
+    .container {
+      margin: 40px auto;
+      width: 80%;
+      max-width: 900px;
+      background-color: #0f3460;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 20px;
+    }
+    .search-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .search-container input {
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    .savings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .savings-table th, .savings-table td {
+      padding: 12px;
+      text-align: left;
+    }
+    .savings-table th {
+      background-color: #27ae60;
+      color: white;
+    }
+    .savings-table tr:nth-child(even) {
+      background-color: #16213e;
+    }
+    .savings-table tr:hover {
+      background-color: #2ecc71;
+    }
+    .actions button {
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      margin-right: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .edit-btn {
+      background-color: #3498db;
+      color: white;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .edit-btn:hover {
+      background-color: #2980b9;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+    .progress-container {
+      margin-top: 20px;
+    }
+    .progress-bar {
+      background-color: #ffcc00;
+      height: 20px;
+      border-radius: 5px;
+      transition: width 0.5s ease;
+    }
+    .summary {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+    .add-savings {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .add-savings input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    .add-btn {
+      background-color: #2ecc71;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .add-btn:hover {
+      background-color: #27ae60;
+    }
+    footer {
+      background-color: #27ae60;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Savings Tracker</h1>
+    <nav>
+      <a href="expensedetails.html">Expenses</a>
+      <a href="incomedetails.html">Income</a>
+      <a href="analyticsdetails.html">Analytics</a>
+      <a href="../Main Page/dashboard.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container">
+      <h2>Your Savings</h2>
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search savings..." onkeyup="searchSavings()">
+      </div>
+      <table class="savings-table">
+        <thead>
+          <tr>
+            <th>Goal Name</th>
+            <th>Saved Amount</th>
+            <th>Target Amount</th>
+            <th>Progress</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="savings-list">
+          <!-- Savings records will be dynamically inserted here -->
+        </tbody>
+      </table>
+      <div class="summary">
+        <p>Total Savings: <span id="total-savings">$0</span></p>
+        <p>Remaining to Reach Goal: <span id="remaining">$0</span></p>
+      </div>
+      <div class="add-savings">
+        <h2>Add New Savings</h2>
+        <input type="text" id="goal-name" placeholder="Enter goal name">
+        <input type="number" id="saved-amount" placeholder="Enter saved amount">
+        <input type="number" id="target-amount" placeholder="Enter target amount">
+        <button class="add-btn" onclick="addSaving()">Add Saving</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Savings Management. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // For demonstration, using localStorage to store savings goals
+    // In a production scenario, you may replace these with API calls
+
+    function renderSavings() {
+      let savings = JSON.parse(localStorage.getItem("savingsGoals")) || [];
+      const savingsList = document.getElementById("savings-list");
+      savingsList.innerHTML = "";
+      let total = 0;
+      savings.forEach(goal => {
+        total += Number(goal.savedAmount);
+        const progressPercent = Math.min((goal.savedAmount / goal.targetAmount) * 100, 100);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${goal.name}</td>
+          <td>$${goal.savedAmount}</td>
+          <td>$${goal.targetAmount}</td>
+          <td>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: ${progressPercent}%;"></div>
+            </div>
+          </td>
+          <td>
+            <button class="delete-btn" onclick="deleteSaving(this)">Delete</button>
+          </td>
+        `;
+        savingsList.appendChild(row);
+      });
+      document.getElementById("total-savings").textContent = "$" + total;
+      // For remaining, you might calculate as: sum of (target - saved) for each goal, or a different logic
+      let remaining = savings.reduce((acc, goal) => acc + (goal.targetAmount - goal.savedAmount), 0);
+      document.getElementById("remaining").textContent = "$" + remaining;
+    }
+
+    function addSaving() {
+      const name = document.getElementById("goal-name").value.trim();
+      const savedAmount = document.getElementById("saved-amount").value;
+      const targetAmount = document.getElementById("target-amount").value;
+      if (!name || !savedAmount || !targetAmount) {
+        alert("Please fill all fields");
+        return;
+      }
+      let savings = JSON.parse(localStorage.getItem("savingsGoals")) || [];
+      const newGoal = { name, savedAmount, targetAmount };
+      savings.push(newGoal);
+      localStorage.setItem("savingsGoals", JSON.stringify(savings));
+      renderSavings();
+      // Clear input fields
+      document.getElementById("goal-name").value = "";
+      document.getElementById("saved-amount").value = "";
+      document.getElementById("target-amount").value = "";
+    }
+
+    function deleteSaving(button) {
+      const row = button.closest("tr");
+      const goalName = row.cells[0].textContent;
+      let savings = JSON.parse(localStorage.getItem("savingsGoals")) || [];
+      savings = savings.filter(goal => goal.name !== goalName);
+      localStorage.setItem("savingsGoals", JSON.stringify(savings));
+      renderSavings();
+    }
+
+    function searchSavings() {
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      const rows = document.querySelectorAll("#savings-list tr");
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(searchValue) ? "" : "none";
+      });
+    }
+
+    window.onload = renderSavings;
+  </script>
+</body>
+</html>

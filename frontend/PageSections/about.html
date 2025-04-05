@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Expense Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* General Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f4f4f4;
+      color: #333;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    /* About Section */
+    .about-us {
+      max-width: 900px;
+      margin: auto;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    /* Title Styling */
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #007bff;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.8s forwards;
+    }
+    /* User Greeting */
+    .user-greeting {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+    /* Content Styling */
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 45%;
+      min-width: 300px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+    .card p, .card ul {
+      font-size: 1rem;
+      color: #555;
+      line-height: 1.6;
+    }
+    .card ul {
+      text-align: left;
+      padding-left: 20px;
+    }
+    /* Call-to-Action (CTA) Buttons */
+    .cta {
+      margin-top: 30px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1.2s forwards;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      color: white;
+      background: #007bff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+      margin: 10px;
+    }
+    .btn:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+    .btn-secondary {
+      background: #28a745;
+    }
+    .btn-secondary:hover {
+      background: #218838;
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+      .card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+    <section id="about" class="about-us">
+        <div class="container">
+            <h2 class="title">Revolutionizing Expense Management</h2>
+            <p class="subtitle">Smarter Savings, Better Control – Take charge of your finances with an intuitive and powerful expense management solution.</p>
+            <p class="user-greeting" id="userGreeting"></p>
+        </div>
+    
+        <div class="content">
+            <div class="card">
+                <h3>Who We Are</h3>
+                <p>At <strong>ExpensePro</strong>, we empower users with smart budgeting tools, automated savings, and real-time tracking to transform the way they manage money.</p>
+            </div>  
+            
+            <div class="card">
+                <h3>Our Unique Approach</h3>
+                <ul>
+                    <li>AI-driven insights for smarter spending.</li>
+                    <li>Automated savings tailored to user behavior.</li>
+                    <li>Real-time expense tracking with visual analytics.</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>Why Choose ExpensePro?</h3>
+                <p>Unlike traditional budgeting tools, ExpensePro adapts to your spending patterns and provides <strong>personalized dashboards</strong> for better financial decisions.</p>
+            </div>
+        </div>
+    
+        <div class="cta">
+            <a href="contact.html" class="btn">Get in Touch</a>
+            <a href="dashboard.html" class="btn btn-secondary" id="dashboardBtn" style="display: none;">Go to Dashboard</a>
+        </div>
+    </section>
+  
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          // Simulate fetching logged-in user info
+          const user = JSON.parse(localStorage.getItem("user")); // Assume user data is stored in localStorage
+
+          if (user) {
+              document.getElementById("userGreeting").innerText = `Welcome back, ${user.name}!`;
+              document.getElementById("dashboardBtn").style.display = "inline-block";
+          }
+      });
+    </script>
+</body>
+</html>

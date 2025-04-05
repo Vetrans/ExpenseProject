@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Goals</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #1a1a2e;
+      color: #e5e5e5;
+      padding-top: 20px;
+      text-align: center;
+    }
+    header {
+      background-color: #e74c3c;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      animation: fadeInDown 1s ease;
+    }
+    header h1 {
+      font-size: 2rem;
+    }
+    header nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+    header nav a:hover {
+      color: #ffcc00;
+    }
+    .quote-section {
+      margin: 40px auto;
+      background: #0f3460;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 60%;
+      animation: fadeIn 1.5s ease;
+    }
+    .quote-text {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: #ffcc00;
+    }
+    .goal-form {
+      background-color: #16213e;
+      padding: 20px;
+      width: 50%;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1.5s ease;
+    }
+    .goal-form input, .goal-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .goal-form button {
+      background-color: #e74c3c;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s;
+      width: 100%;
+    }
+    .goal-form button:hover {
+      background-color: #ffcc00;
+      color: black;
+    }
+    .goals-container {
+      margin: 40px auto;
+      width: 80%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .goal-card {
+      background-color: #16213e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      width: 300px;
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: slideInUp 1s ease;
+    }
+    .goal-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+    .goal-card h3 {
+      color: #ffcc00;
+      font-size: 1.4rem;
+    }
+    .goal-card p {
+      font-size: 1.1rem;
+    }
+    footer {
+      background-color: #e74c3c;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Financial Goals</h1>
+    <nav>
+      <a href="..\Main Page\dashboard.html">Home</a>
+      <a href="expensedetails.html">Expenses</a>
+      <a href="analyticsdetails.html">Analytics</a>
+      <a href="savings.html">Savings</a>
+    </nav>
+  </header>
+
+  <section class="quote-section">
+    <h2>Motivational Quote</h2>
+    <p class="quote-text" id="quote-text">Loading...</p>
+  </section>
+
+  <section class="goal-form">
+    <h2>Add a New Financial Goal</h2>
+    <input type="text" id="goal-name" placeholder="Goal Name (e.g., Buy a Car)">
+    <input type="text" id="goal-price" placeholder="Target Price (e.g., ₹10,00,000)">
+    <input type="text" id="goal-date" placeholder="Target Date (e.g., 2026)">
+    <input type="text" id="goal-saved" placeholder="Amount Saved (e.g., ₹50,000)">
+    <textarea id="goal-features" placeholder="Features / Description"></textarea>
+    <button onclick="addGoal()">Add Goal</button>
+  </section>
+
+  <section class="goals-container" id="goals-list">
+    <!-- Dynamic Goals will be added here -->
+  </section>
+  
+
+  <footer>
+    <p>&copy; 2025 Expense Management. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Function to fetch and display the motivational quote
+    const quotes = [
+      "Do not save what is left after spending, but spend what is left after saving. - Warren Buffett",
+      "A budget is telling your money where to go instead of wondering where it went. - Dave Ramsey",
+      "The stock market is filled with individuals who know the price of everything, but the value of nothing. - Philip Fisher",
+      "It’s not about having lots of money, but knowing how to manage it. - Anonymous",
+      "Wealth consists not in having great possessions, but in having few wants. - Epictetus"
+    ];
+  
+    function updateQuote() {
+      const quoteText = document.getElementById('quote-text');
+      let randomIndex = Math.floor(Math.random() * quotes.length);
+      quoteText.textContent = quotes[randomIndex];
+    }
+  
+    // Update quote every 5 seconds
+    setInterval(updateQuote, 5000);
+    window.onload = function () {
+      updateQuote();
+      loadGoals(); // Load goals from the server when the page loads
+    };
+  
+    // Add a new financial goal
+    async function addGoal() {
+      const name = document.getElementById('goal-name').value.trim();
+      const price = document.getElementById('goal-price').value.trim();
+      const date = document.getElementById('goal-date').value.trim();
+      const features = document.getElementById('goal-features').value.trim();
+      const saved = document.getElementById('goal-saved').value.trim();
+      const goal = { name, price, date, features, saved };
+
+  
+      if (!name || !price || !date || !features) {
+        alert("Please fill out all fields.");
+        return;
+      }
+  
+      const token = localStorage.getItem("token");  // Get user token
+  
+      if (!token) {
+        window.location.href = "../UserCredentials/login.html";
+        return;
+      }
+  
+  
+      try {
+        const response = await fetch("http://localhost:5000/api/goals", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(goal)
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to add goal");
+        }
+  
+        loadGoals();  // Reload goals after successfully adding one
+        document.getElementById('goal-name').value = "";
+        document.getElementById('goal-price').value = "";
+        document.getElementById('goal-date').value = "";
+        document.getElementById('goal-features').value = "";
+      } catch (error) {
+        console.error("Error adding goal:", error);
+        alert("Error adding goal. Please try again.");
+      }
+    }
+  
+    // Function to load goals from the backend API
+    async function loadGoals() {
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        window.location.href = "../UserCredentials/login.html";
+        return;
+      }
+  
+      try {
+        const response = await fetch("http://localhost:5000/api/goals", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch goals");
+        }
+  
+        const data = await response.json();
+        const goalsList = document.getElementById("goals-list");
+        goalsList.innerHTML = "";
+  
+        data.goals.forEach(goal => {
+          const goalCard = document.createElement("div");
+          goalCard.classList.add("goal-card");
+          goalCard.innerHTML = `
+          <h3>🏆 ${goal.name}</h3>
+          <p>Target Price: ${goal.price}</p>
+          <p>Target Date: ${goal.date}</p>
+          <p>${goal.features}</p>
+          <progress value="0" max="${goal.price}" id="progress-${goal.id}"></progress>
+          <button onclick="editGoal(${goal.id})">✏️ Edit</button>
+          <button onclick="deleteGoal(${goal.id})">❌ Delete</button>
+        `;
+
+          goalsList.appendChild(goalCard);
+        });
+      } catch (error) {
+        console.error("Error loading goals:", error);
+      }
+    }
+    async function editGoal(id) {
+  const newName = prompt("Enter new goal name:");
+  const newPrice = prompt("Enter new target price:");
+  const newDate = prompt("Enter new target date:");
+  const newFeatures = prompt("Enter new features:");
+
+  if (!newName || !newPrice || !newDate || !newFeatures) {
+    alert("All fields are required.");
+    return;
+  }
+
+  const response = await fetch(`http://localhost:5000/api/goals/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
+    body: JSON.stringify({ name: newName, price: newPrice, date: newDate, features: newFeatures })
+  });
+
+  if (response.ok) {
+    loadGoals();
+  } else {
+    alert("Failed to update goal.");
+  }
+}
+
+async function deleteGoal(id) {
+  const confirmDelete = confirm("Are you sure you want to delete this goal?");
+  if (!confirmDelete) return;
+
+  const response = await fetch(`http://localhost:5000/api/goals/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+  });
+
+  if (response.ok) {
+    loadGoals();
+  } else {
+    alert("Failed to delete goal.");
+  }
+}
+
+  </script>
+  
+</body>
+</html>

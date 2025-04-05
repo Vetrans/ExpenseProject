@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recent Transactions</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1a1a2e;
+      color: #e5e5e5;
+      line-height: 1.6;
+      padding-top: 20px;
+    }
+    header {
+      background-color: #27ae60;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+    header nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+    header nav a:hover {
+      color: #ffcc00;
+    }
+    .container {
+      margin: 40px auto;
+      width: 80%;
+      max-width: 900px;
+      background-color: #0f3460;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 20px;
+    }
+    .search-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .search-container input, .search-container select {
+      padding: 10px;
+      width: 48%;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    .transactions {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .transactions th, .transactions td {
+      padding: 12px;
+      text-align: left;
+    }
+    .transactions th {
+      background-color: #27ae60;
+      color: white;
+    }
+    .transactions tr:nth-child(even) {
+      background-color: #16213e;
+    }
+    .transactions tr:hover {
+      background-color: #2ecc71;
+    }
+    .transactions .credit {
+      color: #2ecc71;
+    }
+    .transactions .debit {
+      color: #e74c3c;
+    }
+    .actions button {
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      margin-right: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .edit-btn {
+      background-color: #3498db;
+      color: white;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .edit-btn:hover {
+      background-color: #2980b9;
+    }
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .pagination button {
+      background-color: #ffcc00;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+      margin: 0 5px;
+      transition: background-color 0.3s ease;
+    }
+    .pagination button:hover {
+      background-color: #e67e22;
+    }
+    footer {
+      background-color: #27ae60;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Recent Transactions</h1>
+    <nav>
+      <a href="expensedetails.html">Expense Details</a>
+      <a href="incomedetails.html">Income Details</a>
+      <a href="analyticsdetails.html">Financial Analysis</a>
+      <a href="../Main Page/dashboard.html">Home</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="container">
+      <h2>Transaction History</h2>
+      
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Search transactions..." onkeyup="searchTransactions()">
+        <select id="filter" onchange="filterTransactions()">
+          <option value="all">All Transactions</option>
+          <option value="credit">Income (Credit)</option>
+          <option value="debit">Expense (Debit)</option>
+        </select>
+      </div>
+      
+      <table class="transactions">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="transaction-list">
+          <!-- Dynamic transaction rows will be inserted here -->
+        </tbody>
+      </table>
+      
+      <div class="pagination">
+        <button onclick="prevPage()">Prev</button>
+        <button onclick="nextPage()">Next</button>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <p>&copy; 2024 Income Management. All Rights Reserved.</p>
+  </footer>
+  
+  <script>
+    // For demonstration purposes, we'll use a static array of transactions.
+    // Replace this with a fetch call to your backend if available.
+    let transactions = [
+      { date: "2025-02-18", description: "Salary", amount: "+ $3,500", type: "credit" },
+      { date: "2025-02-17", description: "Grocery Shopping", amount: "- $120", type: "debit" },
+      { date: "2025-02-16", description: "Online Purchase", amount: "- $75", type: "debit" },
+      { date: "2025-02-15", description: "Freelance Work", amount: "+ $500", type: "credit" },
+      // ... more transactions
+    ];
+
+    let currentPage = 1;
+    const pageSize = 5; // Adjust as needed
+
+    function renderTransactions() {
+      const tbody = document.getElementById("transaction-list");
+      tbody.innerHTML = "";
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const paginatedItems = transactions.slice(start, end);
+      paginatedItems.forEach(tx => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tx.date}</td>
+          <td>${tx.description}</td>
+          <td class="${tx.type}">${tx.amount}</td>
+          <td>${tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}</td>
+          <td>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn" onclick="deleteTransaction(this)">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function deleteTransaction(button) {
+      // Remove from static array for demo purposes
+      const row = button.closest('tr');
+      const desc = row.cells[1].textContent;
+      transactions = transactions.filter(tx => tx.description !== desc);
+      renderTransactions();
+    }
+
+    function searchTransactions() {
+      const searchValue = document.getElementById('search').value.toLowerCase();
+      const filtered = transactions.filter(tx => {
+        return (
+          tx.date.toLowerCase().includes(searchValue) ||
+          tx.description.toLowerCase().includes(searchValue) ||
+          tx.amount.toLowerCase().includes(searchValue) ||
+          tx.type.toLowerCase().includes(searchValue)
+        );
+      });
+      // Temporarily override transactions array for search results
+      renderFilteredTransactions(filtered);
+    }
+
+    function renderFilteredTransactions(filtered) {
+      const tbody = document.getElementById("transaction-list");
+      tbody.innerHTML = "";
+      filtered.forEach(tx => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tx.date}</td>
+          <td>${tx.description}</td>
+          <td class="${tx.type}">${tx.amount}</td>
+          <td>${tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}</td>
+          <td>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn" onclick="deleteTransaction(this)">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function filterTransactions() {
+      const filterValue = document.getElementById('filter').value.toLowerCase();
+      if (filterValue === "all") {
+        renderTransactions();
+      } else {
+        const filtered = transactions.filter(tx => tx.type === filterValue);
+        renderFilteredTransactions(filtered);
+      }
+    }
+
+    function nextPage() {
+      if (currentPage * pageSize < transactions.length) {
+        currentPage++;
+        renderTransactions();
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTransactions();
+      }
+    }
+
+    window.onload = function() {
+      renderTransactions();
+    };
+  </script>
+</body>
+</html>

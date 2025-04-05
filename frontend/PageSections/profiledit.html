@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile | Expense Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f4f4f4;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .edit-card {
+      background: #fff;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .edit-header {
+      background: linear-gradient(135deg, #ff5733, #e74c3c);
+      padding: 25px 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .edit-header h1 {
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+    }
+    .edit-header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    .edit-container {
+      padding: 30px 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    textarea {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.3s ease;
+      width: 100%;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    textarea:focus {
+      border: 1px solid #ff5733;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-save {
+      background: linear-gradient(45deg, #ff5733, #e74c3c);
+      color: #fff;
+    }
+    .btn-cancel {
+      background: #ddd;
+      color: #333;
+    }
+    .btn-save:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .btn-cancel:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    @media (max-width: 600px) {
+      .edit-container {
+        padding: 20px;
+      }
+      .btn-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="edit-card">
+    <!-- Header -->
+    <div class="edit-header">
+      <h1>Edit Profile</h1>
+      <p>Update your profile information</p>
+    </div>
+    <!-- Form Container -->
+    <div class="edit-container">
+      <form id="edit-profile-form" action="#" method="post">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Your email">
+        </div>
+        <div class="form-group">
+          <label for="member-since">Member Since</label>
+          <input type="date" id="member-since" name="memberSince">
+        </div>
+        <div class="form-group">
+          <label for="about">About Me</label>
+          <textarea id="about" name="about" placeholder="Write something about yourself..."></textarea>
+        </div>
+        <div class="btn-container">
+          <button type="submit" class="btn btn-save">Save Changes</button>
+          <button type="button" class="btn btn-cancel" onclick="window.location.href='../PageSections/profile.html'">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    // When the page loads, prefill the form with data from localStorage.
+    window.onload = function() {
+      const savedProfile = JSON.parse(localStorage.getItem('profileData'));
+      if (savedProfile) {
+        document.getElementById('name').value = savedProfile.name || '';
+        document.getElementById('email').value = savedProfile.email || '';
+        document.getElementById('member-since').value = savedProfile.memberSince || '';
+        document.getElementById('about').value = savedProfile.about || '';
+      }
+    };
+
+    // Handle form submission to save updated profile data
+    document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect updated data
+      const updatedProfile = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        memberSince: document.getElementById('member-since').value,
+        about: document.getElementById('about').value
+      };
+      
+      // Save updated profile data in localStorage
+      localStorage.setItem('profileData', JSON.stringify(updatedProfile));
+      
+      alert('Profile updated successfully!');
+      // Redirect back to profile page
+      window.location.href = '../PageSections/profile.html';
+    });
+  </script>
+</body>
+</html>

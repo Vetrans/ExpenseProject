@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #1a1a2e;
+        color: #e5e5e5;
+        line-height: 1.6;
+        padding-top: 20px;
+    }
+
+    header {
+        background-color: #e74c3c;
+        color: white;
+        padding: 15px 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+
+    header nav a {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    header nav a:hover {
+        color: #ffcc00;
+    }
+
+    .overview {
+        margin: 40px 20px;
+        text-align: center;
+    }
+
+    .overview h2 {
+        font-size: 2rem;
+        color: #ffcc00;
+        margin-bottom: 20px;
+    }
+
+    .metrics {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .metric {
+        background-color: #0f3460;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 250px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+    .metric:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .metric h3 {
+        font-size: 1.2rem;
+        color: #ffcc00;
+        margin-bottom: 10px;
+    }
+
+    .metric p {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #e74c3c;
+    }
+
+    #charts {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .chart-grid {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 45%;
+        min-width: 300px;
+        height: 400px;
+        border-radius: 10px;
+        background-color: #0f3460;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .recent-expenses {
+        margin: 40px 20px;
+        background-color: #0f3460;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #1a1a2e;
+        color: #ffcc00;
+    }
+
+    table tr:hover {
+        background-color: #16213e;
+    }
+
+    footer {
+        background-color: #e74c3c;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin-top: 50px;
+    }
+</style>
+
+<body>
+    <header>
+        <h1>Expense Details</h1>
+        <nav>
+            <a href="add-expense.html">Add Expense</a>
+            <a href="analyticsdetails.html">Financial Analysis</a>
+            <a href="incomedetails.html">Income Details</a>
+            <a href="../Main Page/dashboard.html">Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="overview">
+            <h2>Expense Overview</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <h3>Total Expense</h3>
+                    <p id="total-expense">$2,000</p>
+                </div>
+                <div class="metric">
+                    <h3>Highest Expense Category</h3>
+                    <p id="highest-expense">Rent - $1000</p>
+                </div>
+                <div class="metric">
+                    <h3>Average Monthly Expense</h3>
+                    <p id="avg-expense">$500</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="charts">
+            <h2>Expense Charts</h2>
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <canvas id="category-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="monthly-expense-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-expenses">
+            <h2>Recent Expenses</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-11-16</td>
+                        <td>Groceries</td>
+                        <td>$200</td>
+                        <td>Food</td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-10</td>
+                        <td>Electricity Bill</td>
+                        <td>$100</td>
+                        <td>Utilities</td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-05</td>
+                        <td>Rent</td>
+                        <td>$1000</td>
+                        <td>Housing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Expense Management. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pie Chart for Expense Categories
+            const categoryCtx = document.getElementById('category-chart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Rent', 'Groceries', 'Utilities', 'Entertainment'],
+                    datasets: [{
+                        data: [1000, 200, 100, 400],
+                        backgroundColor: ['#ff9900', '#66ccff', '#ff3366', '#99cc33']
+                    }]
+                }
+            });
+
+            // Bar Chart for Monthly Expenses
+            const monthlyCtx = document.getElementById('monthly-expense-chart').getContext('2d');
+            new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Monthly Expenses',
+                        data: [1200, 1500, 1000, 1300, 1700, 1400],
+                        backgroundColor: '#e74c3c'
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

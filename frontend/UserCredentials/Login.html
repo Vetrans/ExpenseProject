@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Expense Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            text-align: center;
+        }
+
+        .login-container {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-container img {
+            width: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .input-wrapper img {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .input-wrapper img:hover {
+            opacity: 1;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        .login-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .login-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .forgot-password {
+            display: block;
+            margin: 5px 0 10px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <img src="https://www.w3schools.com/howto/img_avatar.png" alt="User Avatar">
+        <h2>Login to Expense Manager</h2>
+        <input type="email" id="email" placeholder="Enter email">
+        <div class="input-wrapper">
+            <input type="password" id="password" placeholder="Enter password">
+            <img src="open-eye.png" alt="Show Password" id="togglePassword" onclick="togglePassword()">
+        </div>
+        <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
+        <p class="error-message" id="error-msg"></p>
+        <button class="login-btn" onclick="validateLogin()">Login</button>
+        <p>Don't have an account? <a href="Register.html">Register</a></p>
+    </div>
+
+    <script>
+        async function validateLogin() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorMsg = document.getElementById("error-msg");
+    
+            errorMsg.style.display = "none";
+    
+            if (email === "admin" && password === "admin") {
+                localStorage.setItem("token", "admin_token");
+                localStorage.setItem("userName", "Admin");
+                localStorage.setItem("userEmail", "admin@expensemanager.com");
+                localStorage.setItem("userBalance", "Unlimited");
+                window.location.href = "../Main Page/dashboard.html";
+                return;
+            }
+    
+            if (email === "" || password === "") {
+                showError("❗ Email and password cannot be empty!");
+                return;
+            }
+    
+            if (!validateEmail(email)) {
+                showError("❗ Please enter a valid email address!");
+                return;
+            }
+    
+            await loginUser(email, password);
+        }
+    
+        async function loginUser(email, password) {
+            const errorMsg = document.getElementById("error-msg");
+    
+            try {
+                const response = await fetch("http://localhost:5000/api/auth/login", { 
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("userName", data.name); // ✅ FIXED
+                    localStorage.setItem("userEmail", data.email);
+                    localStorage.setItem("userBalance", data.balance || "0");
+    
+                    window.location.href = "../Main Page/dashboard.html";
+                } else {
+                    showError(data.error || "❌ Invalid credentials.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                showError("❌ Cannot connect to server. Please try again!");
+            }
+        }
+    
+        function showError(message) {
+            const errorMsg = document.getElementById("error-msg");
+            errorMsg.textContent = message;
+            errorMsg.style.display = "block";
+        }
+    
+        function validateEmail(email) {
+            const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return re.test(email);
+        }
+    
+        function togglePassword() {
+            let passwordInput = document.getElementById("password");
+            let togglePasswordImg = document.getElementById("togglePassword");
+    
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                togglePasswordImg.src = "closed-eye.png";
+            } else {
+                passwordInput.type = "password";
+                togglePasswordImg.src = "open-eye.png";
+            }
+        }
+    </script>
+    
+
+</body>
+</html>

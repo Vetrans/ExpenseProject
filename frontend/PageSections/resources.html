@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Resources</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #d32f2f;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section h3 {
+      background: #d32f2f;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .content {
+      display: none;
+      padding: 15px;
+      background: #fff5f5;
+      border-left: 5px solid #d32f2f;
+      margin-top: 5px;
+    }
+    .content ul {
+      list-style: none;
+      padding-left: 10px;
+    }
+    .content ul li {
+      margin-bottom: 10px;
+    }
+    .content ul li a {
+      text-decoration: none;
+      color: #d32f2f;
+      font-weight: bold;
+    }
+    .search-bar {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #d32f2f;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Financial Resources</h2>
+
+    <input type="text" id="search" class="search-bar" placeholder="Search resources...">
+
+    <div class="section">
+      <h3 onclick="toggleContent('finance-education')">💡 Financial Education</h3>
+      <div id="finance-education" class="content">
+        <ul>
+          <li><a href="#">Guide to Budgeting</a></li>
+          <li><a href="#">How to Save More Money</a></li>
+          <li><a href="#">Investment Basics</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('tools')">📊 Tools & Calculators</h3>
+      <div id="tools" class="content">
+        <ul>
+          <li><a href="#">EMI Calculator</a></li>
+          <li><a href="#">Loan Comparison Tool</a></li>
+          <li><a href="#">Savings Growth Calculator</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('legal-tax')">📜 Legal & Tax Information</h3>
+      <div id="legal-tax" class="content">
+        <ul>
+          <li><a href="#">Income Tax Guide</a></li>
+          <li><a href="#">GST Rules & Regulations</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('videos')">📹 Video Tutorials & Courses</h3>
+      <div id="videos" class="content">
+        <ul>
+          <li><a href="#">Personal Finance YouTube Playlist</a></li>
+          <li><a href="#">Udemy: Finance for Beginners</a></li>
+          <li><a href="#">Coursera: Budgeting 101</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('downloads')">📂 Downloadable Resources</h3>
+      <div id="downloads" class="content">
+        <ul>
+          <li><a href="#">Budgeting Template (Excel)</a></li>
+          <li><a href="#">PDF Guide to Smart Saving</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('useful-links')">🔗 Useful Websites & Apps</h3>
+      <div id="useful-links" class="content">
+        <ul>
+          <li><a href="#">Official Government Finance Portal</a></li>
+          <li><a href="#">Top 5 Budgeting Apps</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 onclick="toggleContent('support')">📞 Support & FAQs</h3>
+      <div id="support" class="content">
+        <ul>
+          <li><a href="#">Customer Support</a></li>
+          <li><a href="#">Frequently Asked Questions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleContent(id) {
+      const content = document.getElementById(id);
+      content.style.display = (content.style.display === "block") ? "none" : "block";
+    }
+
+    // Search through section headers
+    document.getElementById("search").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const sections = document.querySelectorAll(".section");
+      sections.forEach(section => {
+        const title = section.querySelector("h3").innerText.toLowerCase();
+        section.style.display = title.includes(query) ? "block" : "none";
+      });
+    });
+  </script>
+</body>
+</html>

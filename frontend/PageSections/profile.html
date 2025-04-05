@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Management | Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f4f4f4;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .profile-card {
+      background: #fff;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .profile-header {
+      background: linear-gradient(135deg, #ff5733, #e74c3c);
+      padding: 30px;
+      text-align: center;
+      color: #fff;
+    }
+    .profile-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .profile-header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    .profile-nav {
+      display: flex;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
+    .profile-nav a {
+      flex: 1;
+      text-align: center;
+      padding: 15px;
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    .profile-nav a:hover, .profile-nav a.active {
+      background: #ffecd1;
+      color: #ff5733;
+    }
+    .profile-content {
+      padding: 30px;
+    }
+    .profile-content h2 {
+      color: #ff5733;
+      margin-bottom: 20px;
+    }
+    .profile-details {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #666;
+    }
+    .edit-profile-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 25px;
+      background: linear-gradient(45deg, #ff5733, #e74c3c);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .edit-profile-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    @media (max-width: 600px) {
+      .profile-header h1 {
+        font-size: 2rem;
+      }
+      .profile-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <h1 id="profile-name">User Name</h1>
+      <p id="profile-email">user@example.com</p>
+      <p id="profile-member-since">Member since: --</p>
+    </div>
+    <!-- Navigation -->
+    <nav class="profile-nav">
+      <a class="active" href="#">Overview</a>
+      <a href="../PageSections/analyticsdetails.html">Activity</a>
+      <a href="../PageSections/settings.html">Settings</a>
+    </nav>
+    <!-- Profile Content -->
+    <div class="profile-content">
+      <h2>About Me</h2>
+      <p id="profile-about" class="profile-details">
+        Welcome to my profile! I manage my expenses and track my financial goals using this platform.
+        I'm passionate about personal finance, saving money, and investing wisely.
+      </p>
+      <a class="edit-profile-btn" href="../PageSections/profiledit.html">Edit Profile</a>
+    </div>
+  </div>
+  
+  <script>
+    async function loadProfile() {
+        const token = localStorage.getItem("token"); // Get JWT token
+        if (!token) {
+            window.location.href = "../UserCredentials/Login.html"; // Redirect if not logged in
+            return;
+        }
+    
+        try {
+            const response = await fetch("http://localhost:5000/profile", {
+                method: "GET",
+                headers: {
+                    "Authorization": token,
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to fetch profile data");
+            }
+    
+            const data = await response.json();
+            document.getElementById("profile-name").textContent = data.name;
+            document.getElementById("profile-email").textContent = data.email;
+            document.getElementById("profile-member-since").textContent = `Member since: ${new Date(data.joined_date).toDateString()}`;
+            document.getElementById("profile-about").textContent = data.about;
+        } catch (error) {
+            console.error("Error loading profile:", error);
+            alert("Failed to load profile. Please try again.");
+        }
+    }
+    
+    // Logout Function
+    function logout() {
+        localStorage.removeItem("token"); // Remove token
+        window.location.href = "../UserCredentials/Login.html"; // Redirect to login
+    }
+    
+    window.onload = loadProfile;
+    </script>
+    
+
+</body>
+</html>

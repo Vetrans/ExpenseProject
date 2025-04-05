@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Expense Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+ <style>
+  /* General Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #2193b0, #6dd5ed);
+}
+
+.container {
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Input Fields */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #dfe3e8;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background: #f9fafc;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #176B87;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(23, 107, 135, 0.2);
+}
+
+/* Password Toggle Icon */
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: 0.2s ease-in-out;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Step Transitions */
+.step {
+  display: none;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.step.active {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Buttons */
+.next-btn, .register-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: #176B87;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.next-btn:hover, .register-btn:hover {
+  background: #135a6c;
+  transform: scale(1.05);
+}
+
+/* Terms & Conditions Section */
+.step label {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #333;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.step input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #176B87;
+}
+
+.step a {
+  color: #176B87;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.step a:hover {
+  text-decoration: underline;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  font-size: 0.9rem;
+  display: none;
+  margin-top: 5px;
+}
+</style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Create Your Account</h2>
+    
+    <form id="registerForm">
+      <!-- Step 1 -->
+      <div class="step active">        
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="date" id="dob" required>
+        <button type="button" class="next-btn" onclick="nextStep()">Next</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <input type="email" id="regEmail" placeholder="Enter Email" required>
+        <div class="input-wrapper">
+          <input type="password" id="regPassword" placeholder="Enter Password" required>
+          <img src="open-eye.png" id="togglePasswordImg" onclick="togglePassword()" class="toggle-password">
+        </div>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <button type="button" class="next-btn" onclick="nextStep()">Next</button>
+      </div>
+
+      <!-- Step 3: Terms and Permissions -->
+      <div class="step">
+        <p>Please read and agree to our Terms and Conditions:</p>
+        <label>
+          <input type="checkbox" id="agreeTerms" required>
+          I have read and agree to the <a href="terms.html" target="_blank">Terms and Conditions</a>
+        </label>
+        
+        <p>Grant permissions for better experience:</p>
+        <label>
+          <input type="checkbox" id="accessDevice">
+          Allow access to device settings
+        </label>
+        <label>
+          <input type="checkbox" id="googleAccess">
+          Connect to Google Account
+        </label>
+
+        <button type="submit" class="register-btn">Register</button>
+      </div>
+
+      <p class="error" id="errorMessage"></p>
+    </form>
+
+    <p class="login-text">Already have an account? <a href="login.html" class="login-link">Log in</a></p>
+  </div>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent form from reloading the page
+    
+        let fullName = document.getElementById("name").value.trim();
+        let dob = document.getElementById("dob").value;
+        let email = document.getElementById("regEmail").value.trim();
+        let password = document.getElementById("regPassword").value;
+        let confirmPassword = document.getElementById("confirmPassword").value;
+        let agreeTerms = document.getElementById("agreeTerms").checked;
+    
+        // Validation checks
+        if (!fullName || !dob || !email || !password || !confirmPassword) {
+            showError("All fields must be filled!");
+            return;
+        }
+    
+        if (!agreeTerms) {
+            showError("You must agree to the terms and conditions.");
+            return;
+        }
+    
+        if (password !== confirmPassword) {
+            showError("Passwords do not match!");
+            return;
+        }
+    
+        let userData = {
+            fullName: fullName,  // ✅ Ensuring consistency with DB schema
+            dob: dob,
+            email: email,
+            password: password,
+        };
+    
+        console.log("📤 Sending Registration Data:", userData); // Debugging
+    
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
+            });
+    
+            const result = await response.json();
+            console.log("📥 Server Response:", result); // Debugging
+    
+            if (response.ok) {
+                alert("Registration successful! Please log in.");
+                window.location.href = "login.html"; // Redirect to login page
+            } else {
+                showError(result.error || "Registration failed. Try again.");
+            }
+        } catch (error) {
+            console.error("❌ Registration Error:", error);
+            showError("An error occurred while registering. Please try again later.");
+        }
+    });
+    
+    // Toggle Password Visibility
+    function togglePassword() {
+        const passwordInput = document.getElementById("regPassword");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const toggleIcon = document.getElementById("togglePasswordImg");
+    
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            confirmPasswordInput.type = "text";
+            toggleIcon.src = "open-eye.png"; // Change icon for 'visible' state
+        } else {
+            passwordInput.type = "password";
+            confirmPasswordInput.type = "password";
+            toggleIcon.src = "closed-eye.png"; // Change icon for 'hidden' state
+        }
+    }
+    
+    // Function to Show Error Messages
+    function showError(message) {
+        let errorMessage = document.getElementById("errorMessage");
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+        errorMessage.style.opacity = "0";
+    
+        setTimeout(() => {
+            errorMessage.style.transition = "opacity 0.5s ease-in-out";
+            errorMessage.style.opacity = "1";
+        }, 10);
+    }
+    
+    // Multi-step Form Navigation
+    let currentStep = 0; // Track the current step
+    
+    function nextStep() {
+        const steps = document.querySelectorAll('.step');
+        
+        // Remove the active class from the current step
+        steps[currentStep].classList.remove('active');
+        
+        // Move to the next step
+        currentStep++;
+        
+        // If we've reached the last step, submit the form
+        if (currentStep >= steps.length) {
+            document.getElementById('registerForm').submit();
+            return;
+        }
+        
+        // Add the active class to the next step
+        steps[currentStep].classList.add('active');
+    }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background-color: #1a1a2e;
+            color: #e5e5e5;
+            padding-top: 20px;
+            transition: background 0.3s ease-in-out;
+        }
+        header {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            font-size: 2rem;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #0f3460;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+        .settings-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #16213e;
+            border-radius: 8px;
+        }
+        .settings-section h3 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+        .settings-section label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .settings-section input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .save-btn {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: block;
+            width: 100%;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+        }
+        .save-btn:hover {
+            background-color: #27ae60;
+        }
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .theme-toggle label {
+            margin-right: 10px;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .toggle-switch::before {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        .toggle-switch.active {
+            background: #27ae60;
+        }
+        .toggle-switch.active::before {
+            transform: translateX(25px);
+        }
+        footer {
+            background-color: #27ae60;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Settings</h1>
+</header>
+
+<main>
+    <section class="container">
+        <h2>Customize Your Experience</h2>
+
+        <!-- Theme Section -->
+        <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="theme-toggle">
+                <label>Dark Mode</label>
+                <div class="toggle-switch" id="themeToggle"></div>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <h3>Account Settings</h3>
+            <label for="username">Full Name</label>
+            <input type="text" id="username" placeholder="Enter your name">
+            
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email">
+            
+            <label for="password">New Password</label>
+            <input type="password" id="password" placeholder="Enter new password">
+            
+            <button class="save-btn" onclick="saveAccountSettings()">Save Changes</button>
+        </div>
+
+        <!-- Notification Preferences -->
+        <div class="settings-section">
+            <h3>Notifications</h3>
+            <label>
+                <input type="checkbox" id="emailNotifications"> Enable Email Notifications
+            </label>
+            <label>
+                <input type="checkbox" id="smsNotifications"> Enable SMS Alerts
+            </label>
+            <button class="save-btn" onclick="saveNotificationSettings()">Update Preferences</button>
+        </div>
+
+        <!-- Security & Logout -->
+        <div class="settings-section">
+            <h3>Security</h3>
+            <button class="save-btn" style="background-color: #e74c3c;" onclick="logout()">Log Out</button>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Expense Management. All Rights Reserved.</p>
+</footer>
+
+<script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+        this.classList.toggle('active');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    // Apply saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.classList.add('active');
+    }
+
+    // Save Account Settings
+    function saveAccountSettings() {
+        const name = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        alert("Account settings updated successfully!");
+    }
+
+    // Save Notification Preferences
+    function saveNotificationSettings() {
+        const emailNotifications = document.getElementById("emailNotifications").checked;
+        const smsNotifications = document.getElementById("smsNotifications").checked;
+        alert("Notification preferences updated successfully!");
+    }
+
+    // Logout Function
+    function logout() {
+        alert("You have been logged out.");
+        window.location.href = "index.html"; // Redirect to login page
+    }
+</script>
+
+</body>
+</html>

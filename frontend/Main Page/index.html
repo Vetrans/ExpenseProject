@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome | Expense Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px 20px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 8px 12px;
+      transition: 0.3s;
+    }
+
+    .navbar a:hover {
+      color: #ffc107;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 120px auto;
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 10px 0 20px;
+    }
+
+    .btn {
+      background: #28a745;
+      color: white;
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin: 10px;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:hover {
+      background: #218838;
+      transform: scale(1.07);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: #ffc107;
+      color: black;
+    }
+
+    .btn-secondary:hover {
+      background: #e0a800;
+    }
+
+    .features {
+      padding: 50px 20px;
+      background: white;
+      color: black;
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-box {
+      max-width: 800px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .feature {
+      font-size: 1.2rem;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .feature:hover {
+      background: #e9ecef;
+      transform: scale(1.05);
+    }
+
+    /* Testimonials Section */
+.testimonials {
+  padding: 60px 20px;
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  color: black;
+  text-align: center;
+  position: relative;
+}
+
+.testimonials h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.testimonial-container {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.testimonial-slide {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+}
+
+.testimonial {
+  flex: 0 0 100%;
+  font-size: 1.2rem;
+  font-style: italic;
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  transition: transform 0.4s ease-in-out;
+}
+
+.testimonial:hover {
+  transform: scale(1.05);
+}
+
+/* Quotation Marks */
+.testimonial::before,
+.testimonial::after {
+  font-size: 50px;
+  color: #007bff;
+  position: absolute;
+  font-weight: bold;
+}
+
+.testimonial::before {
+  content: "“";
+  top: 10px;
+  left: 20px;
+}
+
+.testimonial::after {
+  content: "”";
+  bottom: 10px;
+  right: 20px;
+}
+
+.testimonial-author {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #007bff;
+}
+
+/* Indicator Dots */
+.indicator-container {
+  margin-top: 20px;
+}
+
+.indicator {
+  height: 14px;
+  width: 14px;
+  background: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 7px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.indicator:hover {
+  transform: scale(1.2);
+}
+
+.indicator.active {
+  background: #007bff;
+  transform: scale(1.3);
+}
+
+
+
+    /* Sticky Footer */
+    .footer {
+      background: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      .feature-box {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <div class="navbar">
+    <a href="../Main Page/index.html">Home</a>
+    <a href="../PageSections/about.html">About</a>
+    <a href="../PageSections/contact.html">Contact</a>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="container">
+    <h1>Welcome to Expense Manager</h1>
+    <p>Track your expenses, set goals, and take control of your finances.</p>
+    <a href="../UserCredentials/login.html" class="btn">Get Started</a>
+    <a href="../PageSections/about.html" class="btn btn-secondary">Learn More</a>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features">
+    <h2>Why Choose Us?</h2>
+    <div class="feature-box">
+      <div class="feature">✅ Smart Expense Tracking</div>
+      <div class="feature">✅ Goal-Based Savings</div>
+      <div class="feature">✅ Secure & Simple</div>
+      <div class="feature">✅ Market Analysis</div>
+    </div>
+  </div>
+
+  <section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial-container">
+      <div class="testimonial-slide">
+        <div class="testimonial">
+          <p>"This platform has truly changed the way I manage my finances. Highly recommended!"</p>
+          <div class="testimonial-author">- Rahul Sharma</div>
+        </div>
+        <div class="testimonial">
+          <p>"A fantastic and user-friendly experience! Tracking expenses has never been easier."</p>
+          <div class="testimonial-author">- Priya Desai</div>
+        </div>
+        <div class="testimonial">
+          <p>"The best tool I've used for budget management. Sleek design and easy to use!"</p>
+          <div class="testimonial-author">- Ankit Verma</div>
+        </div>
+        <div class="testimonial">
+          <p>"This app keeps me on top of my savings goals. Absolutely love the UI!"</p>
+          <div class="testimonial-author">- Sneha Patil</div>
+        </div>
+        <div class="testimonial">
+          <p>"I've tried many budgeting apps, but this one stands out. Great work!"</p>
+          <div class="testimonial-author">- Rohan Mehta</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="indicator-container">
+      <span class="indicator active"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+    </div>
+  </section>
+  
+
+
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>&copy; 2025 Expense Manager. All Rights Reserved.</p>
+    <a href="../PageSections/contact.html" class="btn">Contact Us</a>
+  </div>
+
+  <script>
+let index = 0;
+const testimonials = document.querySelector(".testimonial-slide");
+const indicators = document.querySelectorAll(".indicator");
+const totalTestimonials = document.querySelectorAll(".testimonial").length; // Dynamically get the count
+
+function changeTestimonial(n) {
+  index = n;
+  updateSlide();
+  resetAutoSlide();
+}
+
+function updateSlide() {
+  testimonials.style.transform = `translateX(-${index * 100}%)`;
+  indicators.forEach((ind, i) => {
+    ind.classList.toggle("active", i === index);
+  });
+}
+
+function autoSlide() {
+  index = (index + 1) % totalTestimonials; // Updated to work for any number of testimonials
+  updateSlide();
+}
+
+let autoSlideInterval = setInterval(autoSlide, 4000); // Start auto-slide
+
+function resetAutoSlide() {
+  clearInterval(autoSlideInterval);
+  autoSlideInterval = setInterval(autoSlide, 4000); // Restart the timer
+}
+
+// Add click event to indicators for manual control
+indicators.forEach((ind, i) => {
+  ind.addEventListener("click", () => changeTestimonial(i));
+});
+
+updateSlide(); // Initialize first slide
+
+  </script>
+</body>
+</html>

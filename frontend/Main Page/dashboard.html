@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Management | Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-color: #fad0c4;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
+    }
+    /* Sidebar Styles */
+   /* Sidebar Starts Hidden */
+#sidebar {
+  width: 260px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.95);
+  position: fixed;
+  left: -260px;  /* Sidebar is hidden initially */
+  top: 0;
+  transition: left 0.4s ease-in-out; /* Smooth slide animation */
+}
+
+/* When Opened */
+#sidebar.open {
+  left: 0; /* Moves sidebar into view */
+}
+
+
+
+
+    /* Sidebar Header */
+    #sidebar h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #ff5733;
+      margin-bottom: 20px;
+    }
+    /* Sidebar Links */
+    #sidebar a {
+      display: block;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      color: #444;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+    #sidebar a:hover {
+      background: rgba(255, 87, 51, 0.2);
+      color: #ff5733;
+      transform: translateX(5px);
+    }
+    /* Menu Button */
+    #menu-btn {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #ff5733;
+      color: white;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 1100;
+      font-size: 1.2rem;
+      transition: all 0.3s ease-in-out;
+    }
+    #menu-btn:hover {
+      transform: scale(1.1);
+      background: #e74c3c;
+    }
+    /* Dashboard Content */
+    #dashboard-content {
+      margin-left: 20px;
+      padding: 20px;
+      transition: margin-left 0.5s ease;
+    }
+   
+
+#sidebar.open ~ #dashboard-content {
+  margin-left: 260px; 
+}
+
+    #dashboard-content h1 {
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+    /* Cards Section */
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      width: 250px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      text-decoration: none;
+      color: #333;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 10%);
+      background-size: 50px 50px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .card:hover::after {
+      opacity: 1;
+    }
+    /* Financial Tips Section */
+    #financial-tips {
+      background-color: #f4f4f4;
+      padding: 20px;
+      margin: 40px auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 800px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 2s ease-in-out;
+    }
+    #financial-tips h2 {
+      font-size: 1.8em;
+      color: #2C3E50;
+      margin-bottom: 15px;
+    }
+    #financial-tips p {
+      font-size: 1.2em;
+      color: #34495E;
+      animation: slideUp 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* Logout Button */
+    .logout-btn {
+      margin: 20px;
+      padding: 12px 20px;
+      background: linear-gradient(45deg, #ff5733, #e74c3c);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logout-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    /* Chatbot/Help Button */
+    #chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff5733;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background 0.3s ease;
+    }
+    #chatbot-btn:hover {
+      background: #e74c3c;
+    }
+    /* Responsive */
+    @media screen and (max-width: 600px) {
+      #sidebar {
+        width: 220px;
+        left: -220px;
+      }
+      #dashboard-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 75px 20px;
+      }
+      .cards-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    @media screen and (max-width: 768px) {
+  #sidebar {
+    width: 240px;
+    left: -240px;
+    transition: left 0.4s ease-in-out;
+  }
+  #sidebar.open {
+    left: 0;
+  }
+  #dashboard-content {
+    transition: margin-left 0.4s ease-in-out;
+  }
+  #sidebar.open ~ #dashboard-content {
+    margin-left: 240px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <button id="menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+  <div id="sidebar">
+    <div><br><br>      
+      <a href="../PageSections/profile.html">👤 Profile</a>
+      <a href="../PageSections/analytics.html">📊 Analytics</a>
+      <a href="../PageSections/add-expense.html">➕ Add Expense</a>
+      <a href="../PageSections/add-income.html">➕ Add Income</a>
+      <a href="../PageSections/financial-goals.html">🎯 Financial Goals</a>
+      <a href="../PageSections/recent-transactions.html">📜 Recent Transactions</a>
+      <a href="../PageSections/notifications.html">🔔 Notifications</a>
+      <a href="../PageSections/about.html">ℹ️ About Us</a>
+      <a href="../PageSections/contact.html">📞 Contact Us</a>
+      <a href="../PageSections/settings.html">⚙️ Settings</a>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div id="dashboard-content">
+    <h1 id="greeting">Hey User</h1>    
+    <br>
+    <!-- Cards Section -->
+    <div class="cards-container">
+      <a class="card" href="../PageSections/analyticsdetails.html">
+        <h3>Overall Analysis</h3>
+        <p>Track your incomes &amp; expenses efficiently.</p>
+      </a>
+      <a class="card" href="../PageSections/financial-goals.html">
+        <h3>Financial Goals</h3>
+        <p>Set and achieve your financial milestones with ease.</p>
+      </a>
+      <a class="card" href="../PageSections/integrations.html">
+        <h3>Payment Gateway</h3>
+        <p>Make Payments.</p>
+      </a>
+      <a class="card" href="../PageSections/resources.html">
+        <h3>Resources</h3>
+        <p>Review all resources to supervise your income &amp; expense activities.</p>
+      </a>
+    </div>
+    <!-- Financial Tips Section -->
+    <div id="financial-tips">
+      <h2>Financial Tip of the Day</h2>
+      <p id="tip-text">Start saving early! Even small amounts add up over time. The earlier you start, the more you can accumulate with compound interest.</p>
+    </div>
+    <canvas id="expenseChart" width="400" height="200"></canvas>
+
+    
+    <!-- Chatbot Button -->
+    <button id="chatbot-btn" onclick="openChatbot()">💬</button>
+  </div>
+
+  <script>
+    async function fetchUpdatedData() {
+    try {
+        let response = await fetch('http://localhost:5000/api/dashboard/data');
+        let data = await response.json();
+        
+        if (response.ok) {
+            updateGraph(data);
+        } else {
+            console.error("Failed to fetch updated data");
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+setInterval(async () => {
+    await updateFinancialData();
+}, 5000);  // Updates every 5 seconds
+
+
+function updateGraph(data) {
+    if (!window.myChart) {
+        let ctx = document.getElementById("expenseChart").getContext("2d");
+        window.myChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "Expense & Income",
+                    data: data.values,
+                    backgroundColor: ["#ff5733", "#2ecc71"],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    } else {
+        window.myChart.data.labels = data.labels;
+        window.myChart.data.datasets[0].data = data.values;
+        window.myChart.update();
+    }
+}
+
+
+setInterval(fetchUpdatedData, 5000); // Refresh data every 5 seconds
+
+   // Sidebar Toggle
+document.addEventListener("DOMContentLoaded", function () {
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const dashboardContent = document.getElementById("dashboard-content");
+
+    menuBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("open");
+        if (sidebar.classList.contains("open")) {
+            sidebar.style.left = "0"; // Open sidebar
+            dashboardContent.style.marginLeft = "260px";
+        } else {
+            sidebar.style.left = "-260px"; // Close sidebar
+            dashboardContent.style.marginLeft = "20px";
+        }
+    });
+});
+
+// Logout Functionality
+function logout() {
+    window.location.href = '../UserCredentials/Login.html';
+}
+
+// Greeting based on Time
+function displayGreeting(userName) {
+    const greetingElement = document.getElementById("greeting");
+    const hours = new Date().getHours();
+    let timeGreeting = "Hey There";
+
+    if (hours >= 5 && hours < 12) {
+        timeGreeting = "Good Morning";
+    } else if (hours >= 12 && hours < 17) {
+        timeGreeting = "Good Afternoon";
+    } else {
+        timeGreeting = "Good Evening";
+    }
+
+    greetingElement.textContent = `${timeGreeting}, ${userName || "User"}!!`;
+}
+
+// Fetch and Update Financial Data
+async function updateFinancialData() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "../UserCredentials/Login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/api/dashboard/user-data", { // Ensure this endpoint exists
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch user dashboard data");
+        }
+
+        const data = await response.json();
+        displayGreeting(data.name);  // Personalized greeting
+        document.getElementById("total-expense").textContent = `₹${(data.total_expense || 0).toFixed(2)}`;
+        document.getElementById("total-income").textContent = `₹${(data.total_income || 0).toFixed(2)}`;
+
+        // Update charts dynamically
+        updateGraph(data.chartData);
+    } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+    }
+}
+
+
+// Chatbot Navigation
+function openChatbot() {
+    window.location.href = '../PageSections/chatbot.html';
+}
+
+// Financial Tips Auto-Refresh
+const financialTips = [
+    "Start saving early! Even small amounts add up over time. 💰",
+    "Invest in stocks to potentially grow your wealth over time. 📈",
+    "Track your spending to identify areas where you can save. 🧐",
+    "Avoid impulse buying by setting a budget for each month. 🛑💸",
+    "Automate your savings to ensure you save consistently. 🔄💵",
+    "Create an emergency fund to cover unexpected expenses. 🚑💳",
+    "Pay off high-interest debt as soon as possible. 💳❌",
+    "Build multiple streams of income to increase your financial security. 💼💡",
+    "Learn about compound interest and how it can work for you. 📚📊",
+    "Invest in education to increase your earning potential. 🎓💵",
+    "Set clear financial goals and track your progress. 🎯📅",
+    "Review your financial plan regularly to ensure you're on track. 🔍📊",
+    "Avoid lifestyle inflation as your income grows. 💡💡",
+    "Start investing for retirement as early as possible. 🏖️🧓",
+    "Diversify your investments to manage risk. 🌍💹",
+    "Shop around for better rates on loans and credit cards. 🛍️💳",
+    "Use cashback and rewards programs to save on purchases. 💳🛍️",
+    "Cut back on unnecessary subscriptions to save money. ✂️📅",
+    "Build a solid credit history to get better loan rates. 🏦📝",
+    "Don't be afraid to seek professional financial advice. 📞💬"
+];
+
+function refreshTip() {
+    const tipTextElement = document.getElementById("tip-text");
+    tipTextElement.style.animation = "fadeOut 1s ease-in-out";
+    setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * financialTips.length);
+        tipTextElement.innerText = financialTips[randomIndex];
+        tipTextElement.style.animation = "none";
+        setTimeout(() => {
+            tipTextElement.style.animation = "slideUp 1s ease-in-out";
+        }, 50);
+    }, 1000);
+}
+setInterval(refreshTip, 4000);
+
+// Initialize Dashboard
+async function initializeDashboard() {
+    await updateFinancialData();
+}
+
+window.onload = initializeDashboard;
+
+
+  </script>
+</body>
+</html>
